@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>yujinms</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- App favicon -->
+        <link rel="shortcut icon" href="static/images/favicon.ico">
+
+        <!-- App css -->
+        <link href="static/css/icons.min.css" rel="stylesheet" type="text/css" />
+        <link href="static/css/app.min.css" rel="stylesheet" type="text/css" />
+    </head>
+
+    <body data-layout="topnav">
+
+        <!-- Begin page -->
+        <div class="wrapper">
+
+            <!-- ============================================================== -->
+            <!-- Start Page Content here -->
+            <!-- ============================================================== -->
+
+            <div class="content-page">
+                <div class="content">
+
+                    <!-- Topbar Start -->
+                    <div class="navbar-custom topnav-navbar">
+                        <div class="container-fluid">
+                            <a href="index.html" class="topnav-logo">
+                                <span class="topnav-logo-lg">
+                                    <img src="static/images/logo.png" alt="" height="20">
+                                </span>
+                                <span class="topnav-logo-sm">
+                                    <img src="static/images/logo.png" alt="" height="20">
+                                </span>
+                            </a>
+                            </ul>
+                            <a class="navbar-toggle"  data-toggle="collapse" data-target="#topnav-menu-content">
+                                <div class="lines">
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <!-- end Topbar -->
+
+
+                    <!-- Start Content-->
+                    <div class="container-fluid">
+
+                        <!-- start page title -->
+                        <div class="row pb-3">
+                        </div>
+                        <!-- end page title -->
+
+                        <div class="row">
+
+                            <div class="col-xl-6 text-center">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="header-title mb-3">Monitoring</h4>
+
+                                        <div class="row text-center">
+
+                                            <div class="col-sm-4">
+                                                <div class="card widget-flat">
+                                                    <div class="card-body">
+                                                        <h5 class="text-muted font-weight-normal mt-0">monitoring1</h5>
+                                                        <h3 id="monitoring1" class="mt-1 mb-1">-</h3>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-4">
+                                                <div class="card widget-flat">
+                                                    <div class="card-body">
+                                                        <h5 class="text-muted font-weight-normal mt-0">monitoring2</h5>
+                                                        <h3 id="monitoring2" class="mt-1 mb-1">-</h3>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-4">
+                                                <div class="card widget-flat">
+                                                    <div class="card-body">
+                                                        <h5 class="text-muted font-weight-normal mt-0">monitoring3</h5>
+                                                        <h3 id="monitoring3" class="mt-1 mb-1">-</h3>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-6 text-center">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="header-title mb-3">Control</h4>
+
+                                        <div class="row text-center">
+
+                                            <div class="col-sm-4">
+                                                <div class="card widget-flat">
+                                                    <div class="card-body">
+                                                        <h5 class="text-muted font-weight-normal mt-0">monitor2</h5>
+                                                        <div class="col-sm-12">
+                                                            <button type="button" id="blinkMonitor" class="btn btn-secondary btn-rounded col-sm-11 text-uppercase">off</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-4">
+                                                <div class="card widget-flat">
+                                                    <div class="card-body">
+                                                        <h5 class="text-muted font-weight-normal mt-0">button</h5>
+                                                        <div class="col-sm-12">
+                                                            <button type="button" id="buttonIncrease" class="btn btn-success btn-rounded col-sm-11 text-uppercase">increase</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-4">
+                                                <div class="card widget-flat">
+                                                    <div class="card-body">
+                                                        <h5 class="text-muted font-weight-normal mt-0">Connect?</h5>
+                                                        <h3 id="isConnected" class="mt-1 mb-1 text-uppercase text-danger">-</h3>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-xl-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="row text-center">
+                                            <div class="col-lg-12">
+                                                <h4 class="header-title mb-3">monitoring graph</h4>
+                                                <div id="containerMonitoring" style="height: 300px;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                <div class="row">
+
+                </div>
+
+                <!-- Footer Start -->
+                <footer class="footer">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                2022 © yujinms
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+                <!-- end Footer -->
+
+            </div>
+
+            <!-- ============================================================== -->
+            <!-- End Page content -->
+            <!-- ============================================================== -->
+
+
+        </div>
+        <!-- END wrapper -->
+
+
+        <!-- App js -->
+        <!-- app.min.js에 jquery-3.3.1이 임베딩되어 있음 -->
+        <script src="static/js/app.min.js"></script>
+        <!-- 뒤에 최신 jquery를 추가하면 최신버전으로 로딩됨 -->
+        <script src="static/js/jquery-3.6.0.min.js"></script>
+
+        <!-- pallete platform state & graph start -->
+        <script src="static/js/highcharts/highcharts.js"></script>
+        <script src="static/js/highcharts/data.js"></script>
+        <script src="static/js/highcharts/exporting.js"></script>
+        <script>
+            containerMonitoring = Highcharts.chart('containerMonitoring', {
+                chart: {
+                    type: 'spline',
+                    // animation: Highcharts.svg, // don't animate in old IE
+                    animation: false,
+                    marginRight: 10,
+                    events: {
+                        load: function() {
+                            // 그래프가 XY, Z로 분리되면서 외부 함수에서 호출함
+                        }
+                    }
+                },
+                title: {
+                    text: ''
+                },
+                subtitle: {
+                    text: ''
+                },
+                xAxis: {
+                    title: {
+                        text: 'Time'
+                    }
+                },
+                yAxis: {
+                    title: {
+                        text: 'values'
+                    }
+                },
+                series: [{name: 'monitoring1'}, {name: 'monitoring2'}, {name: 'monitoring3'}].map(function(s) {
+                    s.data = [];
+                    // 화면에 플롯되는 데이터 개수
+                    for (var i = 0; i < 200; i++) {
+                        s.data.push(0);
+                    }
+                    return s;
+                })
+            });
+
+            getData();
+            // 데이터 수신주기(200ms)
+            setInterval(getData, 200);
+            function getData() {
+                $.ajax({
+                    url: '/post/getData',
+                    type: 'POST',
+                    success: function (args) {
+                        var data = JSON.parse(args);
+                        // console.log(data);
+                        if (data.error == false) {
+                            containerMonitoring.series[0].addPoint(parseFloat(data.message.display1), false, true);
+                            containerMonitoring.series[1].addPoint(parseFloat(data.message.display2), false, true);
+                            containerMonitoring.series[2].addPoint(parseFloat(data.message.display3), false, true);
+                            containerMonitoring.redraw();
+
+                            document.getElementById('monitoring1').innerHTML = data.message.display1;
+                            document.getElementById('monitoring2').innerHTML = data.message.display2;
+                            document.getElementById('monitoring3').innerHTML = data.message.display3;
+
+                            if (data.message.display2 != 0) {
+                                document.getElementById('blinkMonitor').innerHTML = "on";
+                                $('#blinkMonitor').removeClass('btn-secondary');
+                                $('#blinkMonitor').addClass('btn-success');
+                            } else {
+                                document.getElementById('blinkMonitor').innerHTML = "off";
+                                $('#blinkMonitor').removeClass('btn-success');
+                                $('#blinkMonitor').addClass('btn-secondary');
+                            }
+
+                            document.getElementById('isConnected').innerHTML = 'on';    // 통신이 안되면 NO, 되는데 이상하면 ERR
+                            $('#isConnected').removeClass('text-danger');
+                            $('#isConnected').addClass('text-success');
+                        } else {
+
+                            document.getElementById('isConnected').innerHTML = 'err';    // 통신이 안되면 NO, 되는데 이상하면 ERR
+                            $('#isConnected').removeClass('text-danger');
+                            $('#isConnected').addClass('text-success');
+                        }
+                    },
+                    error: function (args) {
+                        document.getElementById('isConnected').innerHTML = 'no';    // 통신이 안되면 NO, 되는데 이상하면 ERR
+                        $('#isConnected').removeClass('text-success');
+                        $('#isConnected').addClass('text-danger');
+                    }
+                });
+            }
+        </script>
+
+        <!-- platform control start -->
+        <script>
+            init_control();
+
+            function init_control() {
+                // window.addEventListener('resize', onWindowResize, false);
+                
+                $('#buttonIncrease').click(
+                    function () {
+                        $.ajax({
+                            url: '/post/buttonIncrease',
+                            type: 'POST',
+                            data: $('').serialize(),
+                            success: function (args) {
+                                var data = JSON.parse(args);
+                                if (data.error == true) {
+                                    console.log(data.message);
+                                    // alert(data.message);
+                                } else {
+                                    console.log(data.message);
+                                    // console.log('buttonIncrease success');
+                                    // alert('buttonIncrease success');
+                                }
+                            },
+                            error: function (args) {
+                                console.log('buttonIncrease fail');
+                                // alert('buttonIncrease fail');
+                            }
+                        });
+                    }
+                );
+            }
+        </script>
+        <!-- platform control end -->
+
+    </body>
+</html>
