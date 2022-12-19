@@ -1023,7 +1023,6 @@ def control_tcp(dummy):
 							size_data = 1
 							byte_data = 4
 							# jog mode : 4, pos mode : 3, joy mode : 18
-							# recipelab 패키지에서 5로 정의되어 있음
 							packet = struct.pack('IHHI', size_cmd*byte_cmd+size_res*byte_res+size_data*byte_data, command, response,
 								5)
 							# print(packet)
