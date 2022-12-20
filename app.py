@@ -112,14 +112,34 @@ def shutdown():
 PLC_HOST = '192.168.0.211'
 PLC_PORT = 6000
 
+IS_SIMULATION = True
+
 import pymcprotocol
 import time
 
 def control_tcp(dummy):
-	pymc3e = pymcprotocol.Type3E()
+	if IS_SIMULATION:
+		print("IS_SIMULATION:", IS_SIMULATION)
 
-	pymc3e.setaccessopt(commtype="ascii")
-	pymc3e.connect(PLC_HOST, PLC_PORT)
+		PLC_SM412_SEC = 0.5
+		ts_sm412_end = ts_sm412_start = time.time()
+
+		plc_m0 = 0
+		plc_m1 = 0
+		plc_m2 = 0
+		plc_x0 = 0
+		plc_x1 = 0
+
+		plc_m0s = [plc_m0]
+		plc_m1s = [plc_m1]
+		plc_m2s = [plc_m2]
+		plc_x0s = [plc_x0]
+		plc_x1s = [plc_x1]
+	else:
+		pymc3e = pymcprotocol.Type3E()
+
+		pymc3e.setaccessopt(commtype="ascii")
+		pymc3e.connect(PLC_HOST, PLC_PORT)
 
 	ts_state_end = ts_state_start = time.time()
 
@@ -129,21 +149,38 @@ def control_tcp(dummy):
 			tx_data = queue_tx.get()
 			print(tx_data)
 
-			if tx_data['address'] == 'x0':
-				if tx_data['state'] == 'plc_x0_down':
-					pymc3e.batchwrite_bitunits(headdevice="X0", values=[1])
-				elif tx_data['state'] == 'plc_x0_up':
-					pymc3e.batchwrite_bitunits(headdevice="X0", values=[0])
-				else:
-					pass
+			if IS_SIMULATION:
+				if tx_data['address'] == 'x0':
+					if tx_data['state'] == 'plc_x0_down':
+						plc_x0 = 1
+					elif tx_data['state'] == 'plc_x0_up':
+						plc_x0 = 0
+					else:
+						pass
 
-			if tx_data['address'] == 'x1':
-				if tx_data['state'] == 'plc_x1_down':
-					pymc3e.batchwrite_bitunits(headdevice="X1", values=[1])
-				elif tx_data['state'] == 'plc_x1_up':
-					pymc3e.batchwrite_bitunits(headdevice="X1", values=[0])
-				else:
-					pass
+				if tx_data['address'] == 'x1':
+					if tx_data['state'] == 'plc_x1_down':
+						plc_x1 = 1
+					elif tx_data['state'] == 'plc_x1_up':
+						plc_x1 = 0
+					else:
+						pass
+			else:
+				if tx_data['address'] == 'x0':
+					if tx_data['state'] == 'plc_x0_down':
+						pymc3e.batchwrite_bitunits(headdevice="X0", values=[1])
+					elif tx_data['state'] == 'plc_x0_up':
+						pymc3e.batchwrite_bitunits(headdevice="X0", values=[0])
+					else:
+						pass
+
+				if tx_data['address'] == 'x1':
+					if tx_data['state'] == 'plc_x1_down':
+						pymc3e.batchwrite_bitunits(headdevice="X1", values=[1])
+					elif tx_data['state'] == 'plc_x1_up':
+						pymc3e.batchwrite_bitunits(headdevice="X1", values=[0])
+					else:
+						pass
 
 		ts_state_end = time.time()
 		if ts_state_end - ts_state_start > (1.0/STATE_LOOP_HZ):
@@ -151,16 +188,39 @@ def control_tcp(dummy):
 				ts_state_start = ts_state_end
 				# print(time.time())
 				
-				plc_m0s = pymc3e.batchread_bitunits(headdevice="M0", readsize=1)
-				plc_m1s = pymc3e.batchread_bitunits(headdevice="M1", readsize=1)
-				plc_m2s = pymc3e.batchread_bitunits(headdevice="M2", readsize=1)
-				# print(plc_m0s[0])
-				# print(plc_m1s[0])
-				# print(plc_m2s[0])
-				plc_x0s = pymc3e.batchread_bitunits(headdevice="X0", readsize=1)
-				plc_x1s = pymc3e.batchread_bitunits(headdevice="X1", readsize=1)
-				# print(plc_x0s[0])
-				# print(plc_x1s[0])
+				if IS_SIMULATION:
+					ts_sm412_end = time.time()
+					if (ts_sm412_end - ts_sm412_start) > PLC_SM412_SEC:
+						ts_sm412_start = ts_sm412_end
+						if plc_m0 == 0:
+							# print('plc_m0 == 0')
+							plc_m0 = 1
+						elif plc_m0 == 1:
+							# print('plc_m0 == 1')
+							plc_m0 = 0
+						else:
+							pass
+
+					plc_m0s = [plc_m0]
+					if (plc_x0 or plc_m1) and (not plc_x1):
+						plc_m1 = 1
+					else:
+						plc_m1 = 0
+					plc_m1s = [plc_m1]
+					plc_m2s = [plc_x1]
+					plc_x0s = [plc_x0]
+					plc_x1s = [plc_x1]
+				else:
+					plc_m0s = pymc3e.batchread_bitunits(headdevice="M0", readsize=1)
+					plc_m1s = pymc3e.batchread_bitunits(headdevice="M1", readsize=1)
+					plc_m2s = pymc3e.batchread_bitunits(headdevice="M2", readsize=1)
+					# print(plc_m0s[0])
+					# print(plc_m1s[0])
+					# print(plc_m2s[0])
+					plc_x0s = pymc3e.batchread_bitunits(headdevice="X0", readsize=1)
+					plc_x1s = pymc3e.batchread_bitunits(headdevice="X1", readsize=1)
+					# print(plc_x0s[0])
+					# print(plc_x1s[0])
 
 				status = {}
 				status['plc_m0'] = plc_m0s[0]
@@ -184,8 +244,8 @@ if __name__ == '__main__':
 	# Flask의 출력을 비활성화 할 경우
 	import logging
 	log = logging.getLogger('werkzeug')
-	# log.disabled = True
-	log.disabled = False
+	log.disabled = True
+	# log.disabled = False
 
 	web_server.start()
 
