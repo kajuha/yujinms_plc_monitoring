@@ -117,7 +117,7 @@ IS_SIMULATION = True
 import pymcprotocol
 import time
 
-def control_tcp(dummy):
+def control_plc(dummy):
 	if IS_SIMULATION:
 		print("IS_SIMULATION:", IS_SIMULATION)
 
@@ -238,8 +238,8 @@ def control_tcp(dummy):
 				queue_rx_state.put(status)
 
 if __name__ == '__main__':
-	tcp_client = Process(target=control_tcp, args=(0, ))
-	tcp_client.start()
+	plc_client = Process(target=control_plc, args=(0, ))
+	plc_client.start()
 
 	# Flask의 출력을 비활성화 할 경우
 	import logging
@@ -249,4 +249,4 @@ if __name__ == '__main__':
 
 	web_server.start()
 
-	tcp_client.join()
+	plc_client.join()
