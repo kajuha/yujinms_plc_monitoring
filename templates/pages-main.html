@@ -68,8 +68,11 @@
                                             <div class="col-sm-4">
                                                 <div class="card widget-flat">
                                                     <div class="card-body">
-                                                        <h5 class="text-muted font-weight-normal mt-0">monitoring1</h5>
-                                                        <h3 id="monitoring1" class="mt-1 mb-1">-</h3>
+                                                        <h5 class="text-muted font-weight-normal mt-0">plc_m0</h5>
+                                                        <h3 id="plc_m0" class="mt-1 mb-1">-</h3>
+                                                        <div class="col-sm-12">
+                                                            <button type="button" id="plc_m0_button" class="btn btn-secondary btn-rounded col-sm-11 text-uppercase">off</button>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -77,8 +80,11 @@
                                             <div class="col-sm-4">
                                                 <div class="card widget-flat">
                                                     <div class="card-body">
-                                                        <h5 class="text-muted font-weight-normal mt-0">monitoring2</h5>
-                                                        <h3 id="monitoring2" class="mt-1 mb-1">-</h3>
+                                                        <h5 class="text-muted font-weight-normal mt-0">plc_m1</h5>
+                                                        <h3 id="plc_m1" class="mt-1 mb-1">-</h3>
+                                                        <div class="col-sm-12">
+                                                            <button type="button" id="plc_m1_button" class="btn btn-secondary btn-rounded col-sm-11 text-uppercase">off</button>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -86,8 +92,11 @@
                                             <div class="col-sm-4">
                                                 <div class="card widget-flat">
                                                     <div class="card-body">
-                                                        <h5 class="text-muted font-weight-normal mt-0">monitoring3</h5>
-                                                        <h3 id="monitoring3" class="mt-1 mb-1">-</h3>
+                                                        <h5 class="text-muted font-weight-normal mt-0">plc_m2</h5>
+                                                        <h3 id="plc_m2" class="mt-1 mb-1">-</h3>
+                                                        <div class="col-sm-12">
+                                                            <button type="button" id="plc_m2_button" class="btn btn-secondary btn-rounded col-sm-11 text-uppercase">off</button>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -107,9 +116,10 @@
                                             <div class="col-sm-4">
                                                 <div class="card widget-flat">
                                                     <div class="card-body">
-                                                        <h5 class="text-muted font-weight-normal mt-0">monitor2</h5>
+                                                        <h5 class="text-muted font-weight-normal mt-0">plc_x0</h5>
+                                                        <h3 id="plc_x0" class="mt-1 mb-1">-</h3>
                                                         <div class="col-sm-12">
-                                                            <button type="button" id="blinkMonitor" class="btn btn-secondary btn-rounded col-sm-11 text-uppercase">off</button>
+                                                            <button type="button" id="plc_x0_button" class="btn btn-secondary btn-rounded col-sm-11 text-uppercase">off</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -118,9 +128,10 @@
                                             <div class="col-sm-4">
                                                 <div class="card widget-flat">
                                                     <div class="card-body">
-                                                        <h5 class="text-muted font-weight-normal mt-0">button</h5>
+                                                        <h5 class="text-muted font-weight-normal mt-0">plc_x1</h5>
+                                                        <h3 id="plc_x1" class="mt-1 mb-1">-</h3>
                                                         <div class="col-sm-12">
-                                                            <button type="button" id="buttonIncrease" class="btn btn-success btn-rounded col-sm-11 text-uppercase">increase</button>
+                                                            <button type="button" id="plc_x1_button" class="btn btn-secondary btn-rounded col-sm-11 text-uppercase">off</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -224,7 +235,7 @@
                         text: 'values'
                     }
                 },
-                series: [{name: 'monitoring1'}, {name: 'monitoring2'}, {name: 'monitoring3'}].map(function(s) {
+                series: [{name: 'plc_m0'}, {name: 'plc_m1'}, {name: 'plc_m2'}].map(function(s) {
                     s.data = [];
                     // 화면에 플롯되는 데이터 개수
                     for (var i = 0; i < 200; i++) {
@@ -244,31 +255,53 @@
                     success: function (args) {
                         var data = JSON.parse(args);
                         // console.log(data);
-                        if (data.error == false) {
-                            containerMonitoring.series[0].addPoint(parseFloat(data.message.display1), false, true);
-                            containerMonitoring.series[1].addPoint(parseFloat(data.message.display2), false, true);
-                            containerMonitoring.series[2].addPoint(parseFloat(data.message.display3), false, true);
+                        if (data.error == false && data.message != null) {
+                            containerMonitoring.series[0].addPoint(parseFloat(data.message.plc_m0), false, true);
+                            containerMonitoring.series[1].addPoint(parseFloat(data.message.plc_m1), false, true);
+                            containerMonitoring.series[2].addPoint(parseFloat(data.message.plc_m2), false, true);
                             containerMonitoring.redraw();
 
-                            document.getElementById('monitoring1').innerHTML = data.message.display1;
-                            document.getElementById('monitoring2').innerHTML = data.message.display2;
-                            document.getElementById('monitoring3').innerHTML = data.message.display3;
+                            document.getElementById('plc_m0').innerHTML = data.message.plc_m0;
+                            document.getElementById('plc_m1').innerHTML = data.message.plc_m1;
+                            document.getElementById('plc_m2').innerHTML = data.message.plc_m2;
 
-                            if (data.message.display2 != 0) {
-                                document.getElementById('blinkMonitor').innerHTML = "on";
-                                $('#blinkMonitor').removeClass('btn-secondary');
-                                $('#blinkMonitor').addClass('btn-success');
+                            document.getElementById('plc_x0').innerHTML = data.message.plc_x0;
+                            document.getElementById('plc_x1').innerHTML = data.message.plc_x1;
+
+                            if (data.message.plc_m0 != 0) {
+                                document.getElementById('plc_m0_button').innerHTML = "on";
+                                $('#plc_m0_button').removeClass('btn-secondary');
+                                $('#plc_m0_button').addClass('btn-success');
                             } else {
-                                document.getElementById('blinkMonitor').innerHTML = "off";
-                                $('#blinkMonitor').removeClass('btn-success');
-                                $('#blinkMonitor').addClass('btn-secondary');
+                                document.getElementById('plc_m0_button').innerHTML = "off";
+                                $('#plc_m0_button').removeClass('btn-success');
+                                $('#plc_m0_button').addClass('btn-secondary');
+                            }
+
+                            if (data.message.plc_m1 != 0) {
+                                document.getElementById('plc_m1_button').innerHTML = "on";
+                                $('#plc_m1_button').removeClass('btn-secondary');
+                                $('#plc_m1_button').addClass('btn-success');
+                            } else {
+                                document.getElementById('plc_m1_button').innerHTML = "off";
+                                $('#plc_m1_button').removeClass('btn-success');
+                                $('#plc_m1_button').addClass('btn-secondary');
+                            }
+
+                            if (data.message.plc_m2 != 0) {
+                                document.getElementById('plc_m2_button').innerHTML = "on";
+                                $('#plc_m2_button').removeClass('btn-secondary');
+                                $('#plc_m2_button').addClass('btn-success');
+                            } else {
+                                document.getElementById('plc_m2_button').innerHTML = "off";
+                                $('#plc_m2_button').removeClass('btn-success');
+                                $('#plc_m2_button').addClass('btn-secondary');
                             }
 
                             document.getElementById('isConnected').innerHTML = 'on';    // 통신이 안되면 NO, 되는데 이상하면 ERR
                             $('#isConnected').removeClass('text-danger');
                             $('#isConnected').addClass('text-success');
                         } else {
-
                             document.getElementById('isConnected').innerHTML = 'err';    // 통신이 안되면 NO, 되는데 이상하면 ERR
                             $('#isConnected').removeClass('text-danger');
                             $('#isConnected').addClass('text-success');
@@ -289,11 +322,12 @@
 
             function init_control() {
                 // window.addEventListener('resize', onWindowResize, false);
-                
-                $('#buttonIncrease').click(
+
+                // $('#plc_x0_button').mousedown(
+                $('#plc_x0_button').on('mousedown touchstart', 
                     function () {
                         $.ajax({
-                            url: '/post/buttonIncrease',
+                            url: '/post/plc_x0_down',
                             type: 'POST',
                             data: $('').serialize(),
                             success: function (args) {
@@ -302,14 +336,96 @@
                                     console.log(data.message);
                                     // alert(data.message);
                                 } else {
-                                    console.log(data.message);
-                                    // console.log('buttonIncrease success');
-                                    // alert('buttonIncrease success');
+                                    $('#plc_x0_button').removeClass('btn-secondary');
+                                    $('#plc_x0_button').addClass('btn-success');
+                                    // console.log('plc_x0_button mousedown');
+                                    // alert('plc_x0_button mousedown');
                                 }
                             },
                             error: function (args) {
-                                console.log('buttonIncrease fail');
-                                // alert('buttonIncrease fail');
+                                console.log('plc_x0_button mousedown fail');
+                                // alert('plc_x0_button mousedown fail');
+                            }
+                        });
+                    }
+                );
+
+                // $('#plc_x0_button').mouseup(
+                $('#plc_x0_button').on('mouseup touchend', 
+                    function () {
+                        $.ajax({
+                            url: '/post/plc_x0_up',
+                            type: 'POST',
+                            data: $('').serialize(),
+                            success: function (args) {
+                                var data = JSON.parse(args);
+                                if (data.error == true) {
+                                    console.log(data.message);
+                                    // alert(data.message);
+                                } else {
+                                    $('#plc_x0_button').removeClass('btn-success');
+                                    $('#plc_x0_button').addClass('btn-secondary');
+                                    // console.log('plc_x0_button mouseup');
+                                    // alert('plc_x0_button mouseup');
+                                }
+                            },
+                            error: function (args) {
+                                console.log('plc_x0_button mouseup fail');
+                                // alert('plc_x0_button mouseup fail');
+                            }
+                        });
+                    }
+                );
+
+                // $('#plc_x1_button').mousedown(
+                $('#plc_x1_button').on('mousedown touchstart', 
+                    function () {
+                        $.ajax({
+                            url: '/post/plc_x1_down',
+                            type: 'POST',
+                            data: $('').serialize(),
+                            success: function (args) {
+                                var data = JSON.parse(args);
+                                if (data.error == true) {
+                                    console.log(data.message);
+                                    // alert(data.message);
+                                } else {
+                                    $('#plc_x1_button').removeClass('btn-secondary');
+                                    $('#plc_x1_button').addClass('btn-success');
+                                    // console.log('plc_x1_button mousedown');
+                                    // alert('plc_x1_button mousedown');
+                                }
+                            },
+                            error: function (args) {
+                                console.log('plc_x1_button mousedown fail');
+                                // alert('plc_x1_button mousedown fail');
+                            }
+                        });
+                    }
+                );
+
+                // $('#plc_x1_button').mouseup(
+                $('#plc_x1_button').on('mouseup touchend', 
+                    function () {
+                        $.ajax({
+                            url: '/post/plc_x1_up',
+                            type: 'POST',
+                            data: $('').serialize(),
+                            success: function (args) {
+                                var data = JSON.parse(args);
+                                if (data.error == true) {
+                                    console.log(data.message);
+                                    // alert(data.message);
+                                } else {
+                                    $('#plc_x1_button').removeClass('btn-success');
+                                    $('#plc_x1_button').addClass('btn-secondary');
+                                    // console.log('plc_x1_button mouseup');
+                                    // alert('plc_x1_button mouseup');
+                                }
+                            },
+                            error: function (args) {
+                                console.log('plc_x1_button mouseup fail');
+                                // alert('plc_x1_button mouseup fail');
                             }
                         });
                     }

@@ -12,6 +12,7 @@ STATE_LOOP_HZ = 10
 # STATE_LOOP_HZ = 0
 QUEUE_RX_STATE_CLEAR_NUM = 10
 queue_rx_state = Queue()
+queue_tx = Queue()
 
 app = Flask(__name__)
 app.config['TEMPLATES_AUTO_RELOAD'] = True
@@ -32,18 +33,41 @@ def page_not_found(e) -> 'html':
 def internal_server_error(e) -> 'html':
 	return render_template('pages-500.html'), 500
 
-@app.route('/post/buttonIncrease', methods=['POST'])
-def buttonIncrease() -> 'json':
-	req_form = request.form.to_dict(flat=False)
+@app.route('/post/plc_x0_down', methods=['POST'], endpoint="plc_x0_down")
+@app.route('/post/plc_x0_up', methods=['POST'], endpoint="plc_x0_up")
+def plc_x0_button() -> 'json':
+	# print(request.endpoint)
+
 	try:
-		status = {}
-		status['ok'] = 'clicked'
-		print(status)
+		button = {
+			'address' : 'x0',
+			'state' : request.endpoint
+		}
+		global queue_tx
+		queue_tx.put(button)
 	except Exception as e:
 		print(inspect.stack()[0][3], e)
 		return json.dumps({'error': True, 'message': str(e)})
 
-	return json.dumps({'error': False, 'message': status})
+	return json.dumps({'error': False})
+
+@app.route('/post/plc_x1_down', methods=['POST'], endpoint="plc_x1_down")
+@app.route('/post/plc_x1_up', methods=['POST'], endpoint="plc_x1_up")
+def plc_x1_button() -> 'json':
+	# print(request.endpoint)
+
+	try:
+		button = {
+			'address' : 'x1',
+			'state' : request.endpoint
+		}
+		global queue_tx
+		queue_tx.put(button)
+	except Exception as e:
+		print(inspect.stack()[0][3], e)
+		return json.dumps({'error': True, 'message': str(e)})
+
+	return json.dumps({'error': False})
 
 @app.route('/post/getData', methods=['POST'])
 def getData() -> 'json':
@@ -60,9 +84,11 @@ def getData() -> 'json':
 
 		status = {}
 		try:
-			status['display1'] = '{0:.2f}'.format(rx_state['display1'])
-			status['display2'] = '{0}'.format(rx_state['display2'])
-			status['display3'] = '{0:.2f}'.format(rx_state['display3'])
+			status['plc_m0'] = '{0}'.format(rx_state['plc_m0'])
+			status['plc_m1'] = '{0}'.format(rx_state['plc_m1'])
+			status['plc_m2'] = '{0}'.format(rx_state['plc_m2'])
+			status['plc_x0'] = '{0}'.format(rx_state['plc_x0'])
+			status['plc_x1'] = '{0}'.format(rx_state['plc_x1'])
 			# print(status)
 		except Exception as e:
 			print(inspect.stack()[0][3], e)
@@ -98,19 +124,50 @@ def control_tcp(dummy):
 	ts_state_end = ts_state_start = time.time()
 
 	while True:
+		if not queue_tx.empty():
+			# print(queue_tx.qsize())
+			tx_data = queue_tx.get()
+			print(tx_data)
+
+			if tx_data['address'] == 'x0':
+				if tx_data['state'] == 'plc_x0_down':
+					pymc3e.batchwrite_bitunits(headdevice="X0", values=[1])
+				elif tx_data['state'] == 'plc_x0_up':
+					pymc3e.batchwrite_bitunits(headdevice="X0", values=[0])
+				else:
+					pass
+
+			if tx_data['address'] == 'x1':
+				if tx_data['state'] == 'plc_x1_down':
+					pymc3e.batchwrite_bitunits(headdevice="X1", values=[1])
+				elif tx_data['state'] == 'plc_x1_up':
+					pymc3e.batchwrite_bitunits(headdevice="X1", values=[0])
+				else:
+					pass
+
 		ts_state_end = time.time()
 		if ts_state_end - ts_state_start > (1.0/STATE_LOOP_HZ):
 			if STATE_LOOP_HZ != 0:
 				ts_state_start = ts_state_end
 				# print(time.time())
 				
-				bitunits_values = pymc3e.batchread_bitunits(headdevice="M0", readsize=1)
-				# print(bitunits_values[0])
+				plc_m0s = pymc3e.batchread_bitunits(headdevice="M0", readsize=1)
+				plc_m1s = pymc3e.batchread_bitunits(headdevice="M1", readsize=1)
+				plc_m2s = pymc3e.batchread_bitunits(headdevice="M2", readsize=1)
+				# print(plc_m0s[0])
+				# print(plc_m1s[0])
+				# print(plc_m2s[0])
+				plc_x0s = pymc3e.batchread_bitunits(headdevice="X0", readsize=1)
+				plc_x1s = pymc3e.batchread_bitunits(headdevice="X1", readsize=1)
+				# print(plc_x0s[0])
+				# print(plc_x1s[0])
 
 				status = {}
-				status['display1'] = -2 + random.random()
-				status['display2'] = bitunits_values[0]
-				status['display3'] = +2 + random.random()
+				status['plc_m0'] = plc_m0s[0]
+				status['plc_m1'] = plc_m1s[0]
+				status['plc_m2'] = plc_m2s[0]
+				status['plc_x0'] = plc_x0s[0]
+				status['plc_x1'] = plc_x1s[0]
 
 				global queue_rx_state
 				if queue_rx_state.qsize() > QUEUE_RX_STATE_CLEAR_NUM:
@@ -127,8 +184,8 @@ if __name__ == '__main__':
 	# Flask의 출력을 비활성화 할 경우
 	import logging
 	log = logging.getLogger('werkzeug')
-	log.disabled = True
-	# log.disabled = False
+	# log.disabled = True
+	log.disabled = False
 
 	web_server.start()
 
