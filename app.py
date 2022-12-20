@@ -69,6 +69,8 @@ def getData() -> 'json':
 			return json.dumps({'error': True, 'message': str(e)})
 
 		return json.dumps({'error': False, 'message': status})
+	else:
+		return json.dumps({'error': False, 'message': None})
 
 def shutdown_server():
     func = request.environ.get('werkzeug.server.shutdown')
